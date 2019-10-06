@@ -91,7 +91,37 @@ public class RoboDrive extends LinearOpMode {
              *************GAMEPAD 1**********************
              ********************************************/
 
-            //ADD BUTTON FUNCTIONALITY HERE LATER
+            while(gamepad1.a) {
+                if(robot.horizontalMotor.getCurrentPosition() < 620)
+                    robot.horizontalMotor.setPower(0.4);
+
+                if(robot.horizontalMotor.getCurrentPosition() >= 620 &&
+                        robot.horizontalMotor.getCurrentPosition() <= 930)
+                    robot.horizontalMotor.setPower(0.2);
+
+                if(robot.horizontalMotor.getCurrentPosition() > 930)
+                    robot.horizontalMotor.setPower(0);
+
+                telemetry.addData("HorizMotor", "Position Reading" + robot.horizontalMotor.getCurrentPosition());
+                telemetry.update();
+            }
+
+            robot.horizontalMotor.setPower(0);
+
+            while(gamepad1.b) {
+                if(robot.horizontalMotor.getCurrentPosition() > -275)
+                    robot.horizontalMotor.setPower(-0.2);
+
+                if(robot.horizontalMotor.getCurrentPosition() < -275)
+                    robot.horizontalMotor.setPower(0);
+
+                if(robot.horizontalMotor.getCurrentPosition() < -500)
+                    robot.horizontalMotor.setPower(0);
+                else if (robot.cantTouchThis.getState() == true)
+                    robot.horizontalMotor.setPower(0);
+            }
+
+            robot.horizontalMotor.setPower(0);
 
 
 
