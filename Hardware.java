@@ -40,20 +40,23 @@ public class Hardware
     public static final double stabbyIniOpen = 0.00;
 
 
-    /* Public OpMode members. */
+    /* Public Motors */
     public DcMotor frontLeftMotor      = null;     // H2 channel 0     FLMotor
     public DcMotor frontRightMotor     = null;     // H2 channel 1     FRMotor
     public DcMotor rearLeftMotor       = null;     // H2 channel 2     RLMotor
     public DcMotor rearRightMotor      = null;     // H2 channel 3     RRMotor
     public DcMotor horizontalMotor     = null;     // H3 channel 0     HorizMotor
-    public DcMotor verticalMotor       = null;     // H3 channel 1     VertMotor
-
+    //public DcMotor verticalMotor       = null;     // H3 channel 1     VertMotor
 
 
     /* Public Servos */
-    public Servo markyBoi              = null;     // H3 servo 1        markyBoi
-    public Servo hookyBoi              = null;     // H2 servo 0        hookyBoi
-    public Servo clampyBoi             = null;     // H2 servo 1        clampyBoi
+    //public Servo markyBoi              = null;     // H3 servo 1        markyBoi
+    //public Servo hookyBoi              = null;     // H2 servo 0        hookyBoi
+    //public Servo clampyBoi             = null;     // H2 servo 1        clampyBoi
+
+
+    /* Public Sensors */
+    public DigitalChannel cantTouchThis = null;    // H2 port 0        cantTouchThis
 
 
     /* local OpMode members. */
@@ -78,13 +81,14 @@ public class Hardware
         frontRightMotor = hwMap.dcMotor.get("RF_Motor");
         rearLeftMotor   = hwMap.dcMotor.get("LR_Motor");
         rearRightMotor  = hwMap.dcMotor.get("RR_Motor");
+        horizontalMotor = hwMap.dcMotor.get("HorizMotor");
 
 
         // Define and initialize servos
-        markyBoi        = hwMap.get(Servo.class, "markyBoi");
+        //markyBoi        = hwMap.get(Servo.class, "markyBoi");
 
         //Initialize servo positions (DEFINE LATER)
-        markyBoi.setPosition(0.08);
+        //markyBoi.setPosition(0.08);
 
 
 Original:
@@ -93,14 +97,6 @@ Original:
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
-
-/*
-        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        rearLeftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
-*/
-
 
 
 /*
@@ -111,24 +107,26 @@ Original:
         rearLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
   */
-// End of fix
 
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rearLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rearRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         rearLeftMotor.setPower(0);
         rearRightMotor.setPower(0);
+        horizontalMotor.setPower(0);
 
     }
 

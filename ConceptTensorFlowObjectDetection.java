@@ -1,4 +1,4 @@
-/* Copyright (c) 2018 FIRST. All rights reserved.
+/* Copyright (c) 2019 FIRST. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted (subject to the limitations in the disclaimer below) provided that
@@ -32,18 +32,16 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
+import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-
-import java.util.List;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
 /**
- * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the gold and silver minerals.
+ * This 2019-2020 OpMode illustrates the basics of using the TensorFlow Object Detection API to
+ * determine the position of the Skystone game elements.
  *
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
@@ -51,13 +49,14 @@ import java.util.List;
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
-@TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
+@TeleOp(name = "Concept: TensorFlow Object Detection", group = "11697")
 //@Disabled
 public class ConceptTensorFlowObjectDetection extends LinearOpMode {
-    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
-    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
-    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-    private String GoldPosition = "";
+    private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    private static final String LABEL_FIRST_ELEMENT = "Stone";
+    private static final String LABEL_SECOND_ELEMENT = "Skystone";
+    private String stonePosition = "";
+
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
@@ -70,7 +69,8 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = "AWc1Bu//////AAABmY4cx70c2U11o94FzSDQGhpHGMy5d5FLzx/3zg+KOI61qY3ZmHIIlWvRGNv201o/XXdfMjjUgsO1nO1nbr40RrQYvttkFB4vMvS35sqvrvJk42LnYkcwKH2hU+fN8+oqm4lOU1EOtfIYo2We6/3xwDJdavPumuEUruK7ubhUjusYMkArzuqjomzGLDCjASXesOGTxhVa0J5Mm5HE9IWsFzqafI0PXiKBKs7xZ2RHXcnZVtTWJETqcN6Kk5vIcREjY7o74cfMzdebTIgeFh8FimMU8MxCB077/pyA7DxsP9TvY1hoqvGbaQs5iAzo81iJ45a0bnCvMamjed0SlkMJqnYgA3zuk7qa9w6TcqvvTEBT";
+    private static final String VUFORIA_KEY =
+            "ARYNigX/////AAABmeXRDofbC0DPuqRvnFl7Lm0xLd3BcZs7CL0R30y56aNmiqgHfjjzoNz1tmjW/mCUTlFCDlebwZwBvbsUYHVnFbvZDj4JAMqCWXjfeQGIPZLKg5ySTrg49Bx0UiaJybDMZhiJfdPAafR02xAXGXvnA8Uoa7/jomwlc2djsoG08Z2b5hKK83LT3nsWixPjixBedVs33VFKTF8w1oarxQwJEUf4GRvBeQVXqz7wgLIeMS1j8NKkcfDLQP1fPTPZINmkSI6vEutYGzPEGl827w37aUx6eszeaw/TEMVWeQFxIZdCwa8uEgPRph695Z1yJu4UoLy6mQXZMXMFTxmW+Z6SCKWIqmNPKLGnRtSNzQol2V9y";
 
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
@@ -79,7 +79,7 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     private VuforiaLocalizer vuforia;
 
     /**
-     * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
+     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
      * Detection engine.
      */
     private TFObjectDetector tfod;
@@ -96,105 +96,107 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
+        /**
+         * Activate TensorFlow Object Detection before we wait for the start command.
+         * Do it here so that the Camera Stream window will have the TensorFlow annotations visible.
+         **/
+        if (tfod != null) {
+            tfod.activate();
+        }
+
         /** Wait for the game to begin */
-        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
         waitForStart();
 
         if (opModeIsActive()) {
-            /** Activate Tensor Flow Object Detection. */
-            if (tfod != null) {
-                tfod.activate();
-            }
+
 
             while (opModeIsActive()) {
+
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
+                        telemetry.addData("# Object Detected", updatedRecognitions.size());
 
-                        /*
-                        if (updatedRecognitions.size() == 1) {
+
+                        if (updatedRecognitions.size() == 2) {
+                            // step through the list of recognitions and get boundary info.
+                            int stoneX = -1, skystoneX = -1;
                             for (Recognition recognition : updatedRecognitions) {
-                                telemetry.addData("Gold Mineral Position", recognition.getLabel());
+                                if (recognition.getLabel().equals(LABEL_FIRST_ELEMENT)) {
+                                    stoneX = (int) recognition.getTop();
+
+                                } else {
+                                    skystoneX = (int) recognition.getTop();
+
+                                }
+
                             }
-                        }
-                        */
 
+                            //NEW LOGIC FOR DETECTION
 
+                            if(skystoneX == -1) {
+                                stonePosition = "RIGHT";
 
-                      if (updatedRecognitions.size() == 2) {
-                        int goldMineralX = -1;
-                        int silverMineralX = -1;
+                            } else {
+                                if(skystoneX > stoneX)
+                                    stonePosition = "CENTER";
 
-                        for (Recognition recognition : updatedRecognitions) {
-                          if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getTop();
-                          }
-                          else {
-                              silverMineralX = (int) recognition.getTop();
-                          }
-                        }
-
-// USE THIS NEW LOGIC
-                        if (goldMineralX == -1) {
-                            GoldPosition = "LEFT";
-                        }
-                        else {
-                            if (goldMineralX > silverMineralX) {
-                                GoldPosition = "CENTER";
+                                else
+                                    stonePosition = "LEFT";
                             }
-                            else {
-                                GoldPosition = "RIGHT";
-                            }
+
+
+                            telemetry.addData("The Skystone is on the: ", stonePosition);
+                            telemetry.addData("skystoneX: ", skystoneX);
+                            telemetry.addData("stoneX: ", stoneX);
+                            telemetry.update();
+
                         }
-
-                          telemetry.addData("Gold Mineral Position", GoldPosition);
-                          telemetry.addData("goldMineralX", "VAL=" + goldMineralX);
-                          telemetry.addData("silverMineralX", "VAL=" + silverMineralX);
-                          telemetry.update();
-
-                      }
-
 
                     }
                 }
             }
-        }
 
-        if (tfod != null) {
-            tfod.shutdown();
+            if (tfod != null) {
+                tfod.shutdown();
+            }
         }
     }
 
-    /**
-     * Initialize the Vuforia localization engine.
-     */
-    private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+        /**
+         * Initialize the Vuforia localization engine.
          */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        private void initVuforia () {
+            /*
+             * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+             */
+            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.FRONT;
+            parameters.vuforiaLicenseKey = VUFORIA_KEY;
+            parameters.cameraDirection = CameraDirection.BACK;
 
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+            //  Instantiate the Vuforia engine
+            vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+            // Loading trackables is not necessary for the TensorFlow Object Detection engine.
+        }
+
+        /**
+         * Initialize the TensorFlow Object Detection engine.
+         */
+        private void initTfod () {
+            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+
+//ORIGINAL CONFIDENCE 0.8
+            tfodParameters.minimumConfidence = 0.6;
+            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+        }
     }
-
-    /**
-     * Initialize the Tensor Flow Object Detection engine.
-     */
-    private void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-            "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-    }
-}
