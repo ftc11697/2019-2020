@@ -46,7 +46,7 @@ public class Hardware
     public DcMotor rearLeftMotor       = null;     // H2 channel 2     RLMotor
     public DcMotor rearRightMotor      = null;     // H2 channel 3     RRMotor
     public DcMotor horizontalMotor     = null;     // H3 channel 0     HorizMotor
-    //public DcMotor verticalMotor       = null;     // H3 channel 1     VertMotor
+    public DcMotor verticalMotor       = null;     // H3 channel 1     VertMotor
 
 
     /* Public Servos */
@@ -82,6 +82,7 @@ public class Hardware
         rearLeftMotor   = hwMap.dcMotor.get("LR_Motor");
         rearRightMotor  = hwMap.dcMotor.get("RR_Motor");
         horizontalMotor = hwMap.dcMotor.get("HorizMotor");
+        verticalMotor   = hwMap.dcMotor.get("VertMotor");
 
 
         // Define and initialize servos
@@ -91,7 +92,6 @@ public class Hardware
         //markyBoi.setPosition(0.08);
 
 
-Original:
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -113,6 +113,7 @@ Original:
         rearLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rearRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         horizontalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        verticalMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -120,6 +121,7 @@ Original:
         rearLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rearRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         horizontalMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        verticalMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         frontLeftMotor.setPower(0);
@@ -127,6 +129,7 @@ Original:
         rearLeftMotor.setPower(0);
         rearRightMotor.setPower(0);
         horizontalMotor.setPower(0);
+    verticalMotor.setPower(0);
 
     }
 

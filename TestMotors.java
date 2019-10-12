@@ -83,7 +83,7 @@ public class TestMotors extends LinearOpMode {
 
             //Control In/Out
             while(gamepad1.a){
-                robot.horizontalMotor.setPower(0.3);
+                robot.horizontalMotor.setPower(0.2);
 
                 telemetry.addData("Status", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
                 telemetry.update();
@@ -93,31 +93,32 @@ public class TestMotors extends LinearOpMode {
 
 
             while (gamepad1.b) {
-                robot.horizontalMotor.setPower(-0.3);
+                robot.horizontalMotor.setPower(-0.2);
 
                 telemetry.addData("Status", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
                 telemetry.update();
             }
 
-            //robot.longMotor.setPower(0.0);
+            robot.horizontalMotor.setPower(0.0);
 
             while(gamepad1.x) {
-               // robot.vertMotor.setPower(0.5);
+                robot.verticalMotor.setPower(-0.3);
 
-                //telemetry.addData("Status", "Position Reading: " + robot.vertMotor.getCurrentPosition());
+                telemetry.addData("Status", "Position Reading: " + robot.verticalMotor.getCurrentPosition());
                 telemetry.update();
             }
 
-            // robot.vertMotor.setPower(0);
+             robot.verticalMotor.setPower(0);
 
             while(gamepad1.y) {
-                //   robot.vertMotor.setPower(-0.3);
-
-                //   telemetry.addData("Status", "Position Reading: " + robot.vertMotor.getCurrentPosition());
+                   robot.verticalMotor.setPower(0.1);
+                   telemetry.addData("Status", "Position Reading: " + robot. verticalMotor.getCurrentPosition());
                 telemetry.update();
             }
 
-            // robot.vertMotor.setPower(0);
+             robot.verticalMotor.setPower(0);
+
+
 
             if(gamepad1.dpad_up) {
                 //robot.leftIn.setPosition(1.0);

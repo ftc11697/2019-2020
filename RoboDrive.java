@@ -47,7 +47,7 @@ public class RoboDrive extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
 
     float                   SPEED_RATE           = 1.0f;       // Driving speed rate
-    double                  curPosition = 0.2;
+    double                  curPosition;
 
     /* Declare Global Variables. */
     private Date today = new Date();
@@ -80,29 +80,31 @@ public class RoboDrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Drive the robot
-            lxValue = getJoystickValue(gamepad1.left_stick_x);
-            lyValue = getJoystickValue(gamepad1.left_stick_y);
-            rxValue = getJoystickValue(gamepad1.right_stick_x);
-            ryValue = getJoystickValue(gamepad1.right_stick_y);
-            driveByJoystick(lxValue, lyValue, rxValue);
+            lxValue = getJoystickValue(-gamepad1.left_stick_x);
+            lyValue = getJoystickValue(-gamepad1.left_stick_y);
+            rxValue = getJoystickValue(-gamepad1.right_stick_x);
+            ryValue = getJoystickValue(-gamepad1.right_stick_y);
+            driveByJoystick(-lxValue, lyValue, rxValue);
 
 
             /********************************************
              *************GAMEPAD 1**********************
              ********************************************/
 
-            while(gamepad1.a) {
+            if(gamepad1.a) {
+                curPosition = robot.horizontalMotor.getCurrentPosition();
+
                 if(robot.horizontalMotor.getCurrentPosition() < 620)
-                    robot.horizontalMotor.setPower(0.4);
+                    robot.horizontalMotor.setPower(0.5);
 
                 if(robot.horizontalMotor.getCurrentPosition() >= 620 &&
                         robot.horizontalMotor.getCurrentPosition() <= 930)
-                    robot.horizontalMotor.setPower(0.2);
+                    robot.horizontalMotor.setPower(0.3);
 
                 if(robot.horizontalMotor.getCurrentPosition() > 930)
                     robot.horizontalMotor.setPower(0);
 
-                telemetry.addData("HorizMotor", "Position Reading" + robot.horizontalMotor.getCurrentPosition());
+                telemetry.addData("HorizMotor", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -110,15 +112,20 @@ public class RoboDrive extends LinearOpMode {
 
             while(gamepad1.b) {
                 if(robot.horizontalMotor.getCurrentPosition() > -275)
-                    robot.horizontalMotor.setPower(-0.2);
+                    robot.horizontalMotor.setPower(-0.4);
 
                 if(robot.horizontalMotor.getCurrentPosition() < -275)
-                    robot.horizontalMotor.setPower(0);
+                    robot.horizontalMotor.setPower(-0.2);
 
                 if(robot.horizontalMotor.getCurrentPosition() < -500)
                     robot.horizontalMotor.setPower(0);
-                else if (robot.cantTouchThis.getState() == true)
-                    robot.horizontalMotor.setPower(0);
+
+                telemetry.addData("HorizMotor", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
+                telemetry.update();
+//
+//                //GETSTATE() HAS A NULLPOINTEREXCEPTION
+//                else if (robot.cantTouchThis.getState() == true)
+//                    robot.horizontalMotor.setPower(0);
             }
 
             robot.horizontalMotor.setPower(0);

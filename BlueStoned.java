@@ -98,6 +98,8 @@ public class BlueStoned extends LinearOpMode {
             tfod.activate();
         }
 
+        sleep(2000);
+
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
@@ -117,7 +119,6 @@ public class BlueStoned extends LinearOpMode {
                     }
 
                     //NEW LOGIC FOR DETECTION
-
                     if(skystoneX == -1) {
                         stonePosition = "RIGHT";
 
@@ -129,14 +130,12 @@ public class BlueStoned extends LinearOpMode {
                             stonePosition = "LEFT";
                     }
 
-
-                    telemetry.addData("The Skystone is on the: ", stonePosition);
-                    telemetry.addData("skystoneX: ", skystoneX);
-                    telemetry.addData("stoneX: ", stoneX);
+                    telemetry.addData("Skystone Position: ", stonePosition);
+//                    telemetry.addData("skystoneX: ", skystoneX);
+//                    telemetry.addData("stoneX: ", stoneX);
                     telemetry.update();
 
                 }
-
             }
         }
 
@@ -180,8 +179,8 @@ public class BlueStoned extends LinearOpMode {
                         }
 
                         telemetry.addData("The Skystone is on the: ", stonePosition);
-                        telemetry.addData("skystoneX: ", skystoneX);
-                        telemetry.addData("stoneX: ", stoneX);
+//                        telemetry.addData("skystoneX: ", skystoneX);
+//                        telemetry.addData("stoneX: ", stoneX);
                         telemetry.update();
 
                     }
@@ -253,18 +252,13 @@ public class BlueStoned extends LinearOpMode {
 
                 }
 
-                //Code for placing Skystone
+                //Place Skystone on Foundation
 
                 if(closeParkWall) {
 
                 } else {
-                    
+
                 }
-
-
-
-
-
 
 
             sleep(5000);
