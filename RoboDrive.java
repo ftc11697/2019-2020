@@ -54,10 +54,10 @@ public class RoboDrive extends LinearOpMode {
     private DateFormat myDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
 
     /* Insert more stuff as needed
-     *  Look at https://tinyurl.com/yb2xco82 for examples */
+    *  Look at https://tinyurl.com/yb2xco82 for examples */
 
 
-    /***** Main Code *****/
+/***** Main Code *****/
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -81,11 +81,11 @@ public class RoboDrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Drive the robot
-            lxValue = getJoystickValue(-gamepad1.left_stick_x);
-            lyValue = getJoystickValue(-gamepad1.left_stick_y);
-            rxValue = getJoystickValue(-gamepad1.right_stick_x);
-            ryValue = getJoystickValue(-gamepad1.right_stick_y);
-            driveByJoystick(-lxValue, lyValue, rxValue);
+            lxValue = getJoystickValue(gamepad1.left_stick_x);
+            lyValue = getJoystickValue(gamepad1.left_stick_y);
+            rxValue = getJoystickValue(gamepad1.right_stick_x);
+            ryValue = getJoystickValue(gamepad1.right_stick_y);
+            driveByJoystick(lxValue, lyValue, rxValue);
 
 
             /********************************************
@@ -210,9 +210,9 @@ public class RoboDrive extends LinearOpMode {
 
     private void logMessage (String myDescription, String myMessage) throws InterruptedException {
 
-        telemetry.addData(myDescription, myMessage);
-        telemetry.update();
-        RobotLog.d("11697CW - " + myDescription + " : " + myMessage);
+            telemetry.addData(myDescription, myMessage);
+            telemetry.update();
+            RobotLog.d("11697CW - " + myDescription + " : " + myMessage);
 
     }
 
@@ -234,33 +234,34 @@ public class RoboDrive extends LinearOpMode {
 
 /********************************************
 
- if (gamepad1.dpad_up) {
- V_POSITION += INCREMENT ;
- if (V_POSITION >= robot.VArmHigh ) {
- V_POSITION = robot.VArmHigh;
- }
- robot.vArm.setPosition(V_POSITION);
- telemetry.addData("UP >> Servo Position", "%5.2f", V_POSITION);
- telemetry.update();
- //sleep(CYCLE_MS);
- robot.waitForTick(CYCLE_MS);
- }
- if (gamepad1.dpad_down) {
- V_POSITION -= INCREMENT ;
- if (V_POSITION <= robot.VArmLow ) {
- V_POSITION = robot.VArmLow;
- }
- robot.vArm.setPosition(V_POSITION);
- telemetry.addData("DOWN >> Servo Position", "%5.2f", V_POSITION);
- telemetry.update();
- //sleep(CYCLE_MS);
- robot.waitForTick(CYCLE_MS);
- }
+            if (gamepad1.dpad_up) {
+                V_POSITION += INCREMENT ;
+                if (V_POSITION >= robot.VArmHigh ) {
+                    V_POSITION = robot.VArmHigh;
+                }
+                robot.vArm.setPosition(V_POSITION);
+                telemetry.addData("UP >> Servo Position", "%5.2f", V_POSITION);
+                telemetry.update();
+                //sleep(CYCLE_MS);
+                robot.waitForTick(CYCLE_MS);
+            }
+            if (gamepad1.dpad_down) {
+                V_POSITION -= INCREMENT ;
+                if (V_POSITION <= robot.VArmLow ) {
+                    V_POSITION = robot.VArmLow;
+                }
+                robot.vArm.setPosition(V_POSITION);
+                telemetry.addData("DOWN >> Servo Position", "%5.2f", V_POSITION);
+                telemetry.update();
+                //sleep(CYCLE_MS);
+                robot.waitForTick(CYCLE_MS);
+            }
 
- ********************************************/
+********************************************/
 
 
 
 
 
 }
+

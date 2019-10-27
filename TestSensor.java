@@ -55,38 +55,32 @@ public class TestSensor extends LinearOpMode {
      * Expansion Hub using a 4-wire JST cable, the second pin gets connected to the Touch Sensor.
      * The lower (first) pin stays unconnected.*
      */
-    Hardware robot = new Hardware();
-    DigitalChannel cantTouchThis;  // Hardware Device Object
+
+    DigitalChannel digitalTouch;  // Hardware Device Object
 
     @Override
     public void runOpMode() {
 
         // Name sensors
-        cantTouchThis = hardwareMap.get(DigitalChannel.class, "cantTouchThis");
+        digitalTouch = hardwareMap.get(DigitalChannel.class, "cantTouchThis");
 
         // set the digital channel to input
-        cantTouchThis.setMode(DigitalChannel.Mode.INPUT);
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
 
         // wait for the start button to be pressed.
         waitForStart();
 
         // while the op mode is active, loop and read the light levels.
         // Note we use opModeIsActive() as our loop condition because it is an interruptible method.
-        int testLoop = 0;
         while (opModeIsActive()) {
-            //testing purposes
-            /*boolean sensorState= cantTouchThis.getState();
-            testLoop++;
-            telemetry.addData(cantTouchThis.getMode()+ " state" + testLoop + ":", sensorState); */
 
-            if (cantTouchThis.getState() == true) {
+
+            if (digitalTouch.getState() == true) {
                 telemetry.addData("Touch Sensor", "Is Pressed");
-                robot.verticalMotor.setPower(0.4);
-                sleep(2000);
-                robot.
             } else {
                 telemetry.addData("Touch Sensor", "Is Not Pressed");
             }
+
             telemetry.update();
         }
     }

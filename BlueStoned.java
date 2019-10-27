@@ -113,7 +113,7 @@ public class BlueStoned extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Move toward stones
-            driveByEncoder(5, 0, 00);
+            driveByEncoder(0.6, 5, 5);
 
             //Scan for skystones
             stoneDetect(tfod);
@@ -467,4 +467,8 @@ public class BlueStoned extends LinearOpMode {
     }
 
 
+
 }
+
+
+
