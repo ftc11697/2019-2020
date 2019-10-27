@@ -33,7 +33,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorREVColorDist
 
 public class Hardware
 
-    /**Unnecessary values are left as examples -- DON'T DELETE */
+        /**Unnecessary values are left as examples -- DON'T DELETE */
 
 {
     //Define values for servos
@@ -52,11 +52,13 @@ public class Hardware
     /* Public Servos */
     //public Servo markyBoi              = null;     // H3 servo 1        markyBoi
     //public Servo hookyBoi              = null;     // H2 servo 0        hookyBoi
-    //public Servo clampyBoi             = null;     // H2 servo 1        clampyBoi
-
+    public Servo clampyBoi1             = null;     // H2 servo 1        clampyBoi1
+    public Servo clampyBoi2             = null;     // H2 servo 2        clampyBoi2
+    public Servo pinchyBoi              = null;     //H2 servo 1 pinchyBoi
 
     /* Public Sensors */
     public DigitalChannel cantTouchThis = null;    // H2 port 0        cantTouchThis
+
 
 
     /* local OpMode members. */
@@ -87,17 +89,18 @@ public class Hardware
 
         // Define and initialize servos
         //markyBoi        = hwMap.get(Servo.class, "markyBoi");
+        clampyBoi1       = hwMap.get(Servo.class, "clampyBoi1");
+        clampyBoi2       = hwMap.get(Servo.class, "clampyBoi2");
+
 
         //Initialize servo positions (DEFINE LATER)
         //markyBoi.setPosition(0.08);
-
 
 
         frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
         rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
         rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
-
 
 /*
 // Fixing inverted controls:
@@ -129,7 +132,7 @@ public class Hardware
         rearLeftMotor.setPower(0);
         rearRightMotor.setPower(0);
         horizontalMotor.setPower(0);
-    verticalMotor.setPower(0);
+        verticalMotor.setPower(0);
 
     }
 
@@ -160,4 +163,3 @@ public class Hardware
 
 
 }
-
