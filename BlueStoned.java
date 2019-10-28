@@ -20,6 +20,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -35,7 +36,9 @@ import static java.lang.Thread.sleep;
 //BLUE Left has "public class BlueLeft extends LinearOpMode
 public class BlueStoned extends LinearOpMode {
     Hardware robot = new Hardware();
-    /** PROGRAM CONFIGURATION VARIABLES */
+    /**
+     * PROGRAM CONFIGURATION VARIABLES
+     */
     private static boolean closeNavWall = false;
     private static boolean closeSkystone = false;
     private static boolean dragFoundation = false;
@@ -90,7 +93,7 @@ public class BlueStoned extends LinearOpMode {
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
-        }  else {
+        } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
         }
 
@@ -98,47 +101,11 @@ public class BlueStoned extends LinearOpMode {
             tfod.activate();
         }
 
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        sleep(2000);
 
-            if (updatedRecognitions != null) {
-                telemetry.addData("# Object Detected", updatedRecognitions.size());
+        //Preliminary skystone scan
+        stoneDetect(tfod);
 
-                if (updatedRecognitions.size() == 2) {
-
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_FIRST_ELEMENT)) {
-                            stoneX = (int) recognition.getTop();
-                        } else {
-                            skystoneX = (int) recognition.getTop();
-                        }
-                    }
-
-                    //NEW LOGIC FOR DETECTION
-
-                    if(skystoneX == -1) {
-                        stonePosition = "RIGHT";
-
-                    } else {
-                        if(skystoneX > stoneX)
-                            stonePosition = "CENTER";
-
-                        else
-                            stonePosition = "LEFT";
-                    }
-
-
-                    telemetry.addData("The Skystone is on the: ", stonePosition);
-                    telemetry.addData("skystoneX: ", skystoneX);
-                    telemetry.addData("stoneX: ", stoneX);
-                    telemetry.update();
-
-                }
-
-            }
-        }
 
         waitForStart();
 
@@ -146,51 +113,14 @@ public class BlueStoned extends LinearOpMode {
         while (opModeIsActive()) {
 
             //Move toward stones
-            driveByEncoder(5,0,00);
+            driveByEncoder(5, 0, 00);
 
             //Scan for skystones
-            if (tfod != null) {
-                // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-
-                if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
-
-                    if (updatedRecognitions.size() == 2) {
-
-                        for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_FIRST_ELEMENT)) {
-                                stoneX = (int) recognition.getTop();
-                            } else {
-                                skystoneX = (int) recognition.getTop();
-                            }
-                        }
-
-                        // Detection logic
-                        if(skystoneX == -1) {
-                            stonePosition = "RIGHT";
-
-                        } else {
-                            if(skystoneX > stoneX)
-                                stonePosition = "CENTER";
-
-                            else
-                                stonePosition = "LEFT";
-                        }
-
-                        telemetry.addData("The Skystone is on the: ", stonePosition);
-                        telemetry.addData("skystoneX: ", skystoneX);
-                        telemetry.addData("stoneX: ", stoneX);
-                        telemetry.update();
-
-                    }
-                }
-            }
+            stoneDetect(tfod);
 
             sleep(5000);
 
-            switch(stonePosition) {
+            switch (stonePosition) {
                 case "LEFT":
                     //Move to skystone
 
@@ -226,45 +156,40 @@ public class BlueStoned extends LinearOpMode {
 
             }
 
-                if(closeSkystone) {
-                    //Adjust as necesssary
+            if (closeSkystone) {
+                //Adjust as necesssary
 
-                } else {
-                    //Adjust as necessary
-                }
-
-
-                if(closeNavWall) {
-                    //Adjust as necessary
+            } else {
+                //Adjust as necessary
+            }
 
 
-                } else {
-                    //Adjust as necessary
-                }
-
-                //Drive under Skybridge
+            if (closeNavWall) {
+                //Adjust as necessary
 
 
-                if(dragFoundation) {
-                    //Drag Foundation
+            } else {
+                //Adjust as necessary
+            }
 
-                } else {
-                    //Adjust
-
-                }
-
-                //Code for placing Skystone
-
-                if(closeParkWall) {
-
-                } else {
-                    
-                }
+            //Drive under Skybridge
 
 
+            if (dragFoundation) {
+                //Drag Foundation
 
+            } else {
+                //Adjust
 
+            }
 
+            //Place Skystone on Foundation
+
+            if (closeParkWall) {
+
+            } else {
+
+            }
 
 
             sleep(5000);
@@ -283,7 +208,7 @@ public class BlueStoned extends LinearOpMode {
      **************************************************
      */
 
-    private void driveByEncoder (double speed, double leftInches, double rightInches) throws InterruptedException {
+    private void driveByEncoder(double speed, double leftInches, double rightInches) throws InterruptedException {
 
         /**********************************************************
          driveByEncoder(0.3, 10.0, 10.0);            // Forward
@@ -346,11 +271,11 @@ public class BlueStoned extends LinearOpMode {
         //robot.rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = (int)(leftInches * COUNTS_PER_INCH);
-        newRightTarget = (int)(rightInches * COUNTS_PER_INCH);
+        newLeftTarget = (int) (leftInches * COUNTS_PER_INCH);
+        newRightTarget = (int) (rightInches * COUNTS_PER_INCH);
         //logMessage("curFL,curFR",  robot.frontLeftMotor.getCurrentPosition() +", "+ robot.frontRightMotor.getCurrentPosition());
 
-        switch(robotAction) {
+        switch (robotAction) {
 
             case "FORWARD":
                 //logMessage("Moving Robot", "FORWARD");
@@ -465,14 +390,15 @@ public class BlueStoned extends LinearOpMode {
     }
 
     //Movement path for rightmost two blocks
-    private void initVuforia () {
+    private void initVuforia() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
 
         //  Instantiate the Vuforia engine
@@ -484,7 +410,7 @@ public class BlueStoned extends LinearOpMode {
     /**
      * Initialize the TensorFlow Object Detection engine.
      */
-    private void initTfod () {
+    private void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
@@ -495,7 +421,50 @@ public class BlueStoned extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
     }
 
+    /**
+     * Do Skystone detection thingy
+     */
+    private void stoneDetect(TFObjectDetector tfod) {
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+                if (updatedRecognitions.size() == 2) {
+
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_FIRST_ELEMENT)) {
+                            stoneX = (int) recognition.getTop();
+                        } else {
+                            skystoneX = (int) recognition.getTop();
+                        }
+                    }
+
+                    //NEW LOGIC FOR DETECTION
+                    if (skystoneX == -1) {
+                        stonePosition = "RIGHT";
+
+                    } else {
+                        if (skystoneX > stoneX)
+                            stonePosition = "CENTER";
+
+                        else
+                            stonePosition = "LEFT";
+                    }
+
+                    telemetry.addData("Skystone Position: ", stonePosition);
+//                    telemetry.addData("skystoneX: ", skystoneX);
+//                    telemetry.addData("stoneX: ", stoneX);
+                    telemetry.update();
+
+                }
+            }
+
+        }
+    }
+
+
 }
-
-
-
