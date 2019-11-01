@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -64,14 +65,15 @@ public class TestServo extends LinearOpMode {
     // Define class members
     Servo  servo;
     double  position = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-    double curPosition1 = 0.0;
-    double curPosition2 = 0.0;
+    double curPosition1 = 0.01;
+    //double curPosition2 = 0.0;
 
 
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
+        robot.pinchyBoi = hardwareMap.get(Servo.class, "pinchyBoi");
 
         // Connect to servo (Assume PushBot Left Hand)
         // Change the text in quotes to match any servo name on your robot.
@@ -83,8 +85,7 @@ public class TestServo extends LinearOpMode {
 
         // Scan servo till stop pressed.
         while(opModeIsActive()){
-            curPosition1 = robot.clampyBoi1.getPosition();
-            curPosition2 = robot.clampyBoi2.getPosition();
+            //curPosition2 = robot.clampyBoi2.getPosition();
 /*
             robot.vertMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.vertMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -149,23 +150,28 @@ public class TestServo extends LinearOpMode {
                 telemetry.update();
             } */
 
-            while(gamepad1.a) {
+
+            while(gamepad1.x) {
                 curPosition1 += 0.001;
 
-                robot.clampyBoi1.setPosition(curPosition1);
-                telemetry.addData("Status: ", "Position Reading(clampyBoi1): " + robot.clampyBoi1.getPosition());
+                robot.pinchyBoi.setPosition(curPosition1);
+                telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                 telemetry.update();
 
             }
-            while(gamepad1.b) {
+            telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+            telemetry.update();
+            while(gamepad1.y) {
                 curPosition1 -= 0.001;
 
-                robot.clampyBoi1.setPosition(curPosition1);
-                telemetry.addData("Status: ", "Position Reading(clampyBoi1): " + robot.clampyBoi1.getPosition());
+                robot.pinchyBoi.setPosition(curPosition1);
+                telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                 telemetry.update();
 
             }
-
+            telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+            telemetry.update();
+/*
             while(gamepad1.x) {
                 curPosition2 += 0.001;
 
@@ -182,7 +188,7 @@ public class TestServo extends LinearOpMode {
                 telemetry.update();
 
             }
-
+*/
 
             // Display the current value
             // telemetry.addData("Servo Position", "%5.2f", position);

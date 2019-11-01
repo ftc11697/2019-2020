@@ -1,4 +1,5 @@
 /*
+/*
 https://github.com/Rambotics/FTC-2016-2017-v2.4-pc/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode
 https://github.com/pmtischler/ftc_app/tree/master/SharedCode/src/main/java/com/github/pmtischler
 
@@ -42,22 +43,23 @@ public class RoboDrive extends LinearOpMode {
     Hardware robot = new Hardware();
 
     // Motors Settings [DO NOT CHANGE]
-    static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder 1440, Andymark = 1120
-    static final double     DRIVE_GEAR_REDUCTION    = 1.3 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    static final double COUNTS_PER_MOTOR_REV = 1120;    // eg: TETRIX Motor Encoder 1440, Andymark = 1120
+    static final double DRIVE_GEAR_REDUCTION = 1.3;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
 
-    float                   SPEED_RATE           = 1.0f;       // Driving speed rate
-    double                  curPosition;
+    float SPEED_RATE = 1.0f;       // Driving speed rate
+    double curPosition;
+    double curPosition1 = 0.0;
 
     /* Declare Global Variables. */
     private Date today = new Date();
     private DateFormat myDateFormat = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
 
     /* Insert more stuff as needed
-    *  Look at https://tinyurl.com/yb2xco82 for examples */
+     *  Look at https://tinyurl.com/yb2xco82 for examples */
 
 
-/***** Main Code *****/
+    /***** Main Code *****/
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,58 +71,58 @@ public class RoboDrive extends LinearOpMode {
         robot.rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
 
-        logMessage("Status", "Initialized v4.0a - " +  myDateFormat.format(today));
+        logMessage("Status", "Initialized v4.0a - " + myDateFormat.format(today));
 
 
         waitForStart(); // Wait for the game to start (driver presses PLAY)
 
-        String                     PREVIOUS_MSG        = "";        // MesLog
+        String PREVIOUS_MSG = "";        // MesLog
         float lxValue = 0, lyValue = 0, rxValue = 0, ryValue = 0;
         //double          curPosition;
 
         while (opModeIsActive()) {
 
             // Drive the robot
-            lxValue = getJoystickValue(gamepad1.left_stick_x);
-            lyValue = getJoystickValue(gamepad1.left_stick_y);
-            rxValue = getJoystickValue(gamepad1.right_stick_x);
-            ryValue = getJoystickValue(gamepad1.right_stick_y);
-            driveByJoystick(lxValue, lyValue, rxValue);
+            lxValue = getJoystickValue(-gamepad1.left_stick_x);
+            lyValue = getJoystickValue(-gamepad1.left_stick_y);
+            rxValue = getJoystickValue(-gamepad1.right_stick_x);
+            ryValue = getJoystickValue(-gamepad1.right_stick_y);
+            driveByJoystick(-lxValue, lyValue, rxValue);
 
 
             /********************************************
              *************GAMEPAD 1**********************
              ********************************************/
 
-            if(gamepad1.a) {
+            if (gamepad1.a) {
 
                 //Go full speed if it's not close to the front
-                if(robot.horizontalMotor.getCurrentPosition() < 605)
+                if (robot.horizontalMotor.getCurrentPosition() < 605)
                     robot.horizontalMotor.setPower(0.5);
 
                 //Go slower if it's close to the front
-                if(robot.horizontalMotor.getCurrentPosition() >= 605 &&
+                if (robot.horizontalMotor.getCurrentPosition() >= 605 &&
                         robot.horizontalMotor.getCurrentPosition() <= 835)
                     robot.horizontalMotor.setPower(0.3);
 
                 //Soft stop
-                if(robot.horizontalMotor.getCurrentPosition() > 835)
+                if (robot.horizontalMotor.getCurrentPosition() > 835)
                     robot.horizontalMotor.setPower(0);
 
                 telemetry.addData("HorizMotor", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
                 telemetry.update();
 
-            } else if(gamepad1.b) {
+            } else if (gamepad1.b) {
                 //Go full speed if it's not close to the back
-                if(robot.horizontalMotor.getCurrentPosition() > -154)
+                if (robot.horizontalMotor.getCurrentPosition() > -154)
                     robot.horizontalMotor.setPower(-0.4);
 
                 //Slow down if it's close to the back
-                if(robot.horizontalMotor.getCurrentPosition() < -154)
+                if (robot.horizontalMotor.getCurrentPosition() < -154)
                     robot.horizontalMotor.setPower(-0.2);
 
                 //Soft stop
-                if(robot.horizontalMotor.getCurrentPosition() < -540)
+                if (robot.horizontalMotor.getCurrentPosition() < -540)
                     robot.horizontalMotor.setPower(0);
 
                 telemetry.addData("HorizMotor", "Position Reading: " + robot.horizontalMotor.getCurrentPosition());
@@ -133,7 +135,7 @@ public class RoboDrive extends LinearOpMode {
                 robot.horizontalMotor.setPower(0);
 
 
-            if(gamepad1.x) {
+            if (gamepad1.x) {
                 robot.verticalMotor.setPower(-0.4);
 
                 telemetry.addData("Status", "Position Reading: " + robot.verticalMotor.getCurrentPosition());
@@ -142,11 +144,21 @@ public class RoboDrive extends LinearOpMode {
             } else if (gamepad1.y) {
                 robot.verticalMotor.setPower(0.2);
 
-                telemetry.addData("Status", "Position Reading: " + robot. verticalMotor.getCurrentPosition());
+                telemetry.addData("Status", "Position Reading: " + robot.verticalMotor.getCurrentPosition());
                 telemetry.update();
 
-            } else
+            } else {
                 robot.verticalMotor.setPower(0);
+
+                //leons's dad pseudocode
+                if (gamepad1.back) {
+                    robot.verticalMotor.setTargetPosition(-190);
+                    robot.horizontalMotor.setTargetPosition(380);
+                    robot.pinchyBoi.setPosition(.28);
+                    if (robot.cantTouchThis.getState()) {
+                        //seeingStone();
+                    }
+                }
 //
 //            //Control Skystone-grabbing arm
 //            if(gamepad1.left_bumper) {
@@ -162,21 +174,20 @@ public class RoboDrive extends LinearOpMode {
 //                telemetry.update();
 //            }
 
-            /********************************************
-             *************GAMEPAD 2**********************
-             ********************************************/
+                /********************************************
+                 *************GAMEPAD 2**********************
+                 ********************************************/
 
-            //ADD BUTTON FUNCTIONALITY HERE LATER
+                //ADD BUTTON FUNCTIONALITY HERE LATER
 
 
+                idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
 
-            idle(); // Always call idle() at the bottom of your while(opModeIsActive()) loop
+            }
 
+            logMessage("Done", "Stopped!");
         }
-
-        logMessage("Done", "Stopped!");
     }
-
 
 
 //===========================================
@@ -184,49 +195,58 @@ public class RoboDrive extends LinearOpMode {
 // ***** User Defined Functions *****
 //===========================================
 
-    private void driveByJoystick(double lxValue, double lyValue, double rxValue) {
-        double vD = Math.sqrt(Math.pow(lxValue, 2) + Math.pow(lyValue, 2));
-        //double thetaD = Math.atan2(lyValue, lxValue);
-        double thetaD = Math.atan2(lxValue, -lyValue);
-        double vTheta = rxValue;
+        private void driveByJoystick ( double lxValue, double lyValue, double rxValue){
+            double vD = Math.sqrt(Math.pow(lxValue, 2) + Math.pow(lyValue, 2));
+            //double thetaD = Math.atan2(lyValue, lxValue);
+            double thetaD = Math.atan2(lxValue, -lyValue);
+            double vTheta = rxValue;
 
-        // Convert desired motion to wheel power, with power clamping.
-        Mecanum.Wheels wheels = Mecanum.motionToWheels(vD, thetaD, vTheta);
-        robot.frontLeftMotor.setPower(wheels.frontLeft);
-        robot.frontRightMotor.setPower(wheels.frontRight);
-        robot.rearLeftMotor.setPower(wheels.backLeft);
-        robot.rearRightMotor.setPower(wheels.backRight);
+            // Convert desired motion to wheel power, with power clamping.
+            Mecanum.Wheels wheels = Mecanum.motionToWheels(vD, thetaD, vTheta);
+            robot.frontLeftMotor.setPower(wheels.frontLeft);
+            robot.frontRightMotor.setPower(wheels.frontRight);
+            robot.rearLeftMotor.setPower(wheels.backLeft);
+            robot.rearRightMotor.setPower(wheels.backRight);
 
-        //telemetry.addData("Status", "==> " + vD +", "+thetaD+", "+vTheta);
-        //telemetry.update();
-    }
+            //telemetry.addData("Status", "==> " + vD +", "+thetaD+", "+vTheta);
+            //telemetry.update();
+        }
 
-    private void stopRobot() {
-        robot.frontLeftMotor.setPower(0);
-        robot.frontRightMotor.setPower(0);
-        robot.rearLeftMotor.setPower(0);
-        robot.rearRightMotor.setPower(0);
-    }
+        private void stopRobot () {
+            robot.frontLeftMotor.setPower(0);
+            robot.frontRightMotor.setPower(0);
+            robot.rearLeftMotor.setPower(0);
+            robot.rearRightMotor.setPower(0);
+        }
 
-    private void logMessage (String myDescription, String myMessage) throws InterruptedException {
+        private void logMessage (String myDescription, String myMessage) throws InterruptedException
+        {
 
             telemetry.addData(myDescription, myMessage);
             telemetry.update();
             RobotLog.d("11697CW - " + myDescription + " : " + myMessage);
 
-    }
-
-    private float getJoystickValue (float rawValue) {
-        //clip the power values so that it only goes from -1 to 1
-        rawValue = Range.clip(rawValue, -1, 1);
-
-        if (Math.abs(rawValue) < 0.1) {
-            return 0;
-        } else {
-            return rawValue * SPEED_RATE;
         }
-    }
 
+        private float getJoystickValue ( float rawValue){
+            //clip the power values so that it only goes from -1 to 1
+            rawValue = Range.clip(rawValue, -1, 1);
+
+            if (Math.abs(rawValue) < 0.1) {
+                return 0;
+            } else {
+                return rawValue * SPEED_RATE;
+            }
+        }
+/*
+    private void seeingStone(){
+        horizontalMotor.setTargetPosition(350);
+        pinchyBoi.setPosition(0);
+        verticalMotor.setTargetPosition(50); // raise 2 inches???
+    }
+ */
+
+/*
 //===========================================
 // ***** Section 6              *****
 // ***** Backup Un-used Code    *****
@@ -234,34 +254,32 @@ public class RoboDrive extends LinearOpMode {
 
 /********************************************
 
-            if (gamepad1.dpad_up) {
-                V_POSITION += INCREMENT ;
-                if (V_POSITION >= robot.VArmHigh ) {
-                    V_POSITION = robot.VArmHigh;
-                }
-                robot.vArm.setPosition(V_POSITION);
-                telemetry.addData("UP >> Servo Position", "%5.2f", V_POSITION);
-                telemetry.update();
-                //sleep(CYCLE_MS);
-                robot.waitForTick(CYCLE_MS);
-            }
-            if (gamepad1.dpad_down) {
-                V_POSITION -= INCREMENT ;
-                if (V_POSITION <= robot.VArmLow ) {
-                    V_POSITION = robot.VArmLow;
-                }
-                robot.vArm.setPosition(V_POSITION);
-                telemetry.addData("DOWN >> Servo Position", "%5.2f", V_POSITION);
-                telemetry.update();
-                //sleep(CYCLE_MS);
-                robot.waitForTick(CYCLE_MS);
-            }
+ if (gamepad1.dpad_up) {
+ V_POSITION += INCREMENT ;
+ if (V_POSITION >= robot.VArmHigh ) {
+ V_POSITION = robot.VArmHigh;
+ }
+ robot.vArm.setPosition(V_POSITION);
+ telemetry.addData("UP >> Servo Position", "%5.2f", V_POSITION);
+ telemetry.update();
+ //sleep(CYCLE_MS);
+ robot.waitForTick(CYCLE_MS);
+ }
+ if (gamepad1.dpad_down) {
+ V_POSITION -= INCREMENT ;
+ if (V_POSITION <= robot.VArmLow ) {
+ V_POSITION = robot.VArmLow;
+ }
+ robot.vArm.setPosition(V_POSITION);
+ telemetry.addData("DOWN >> Servo Position", "%5.2f", V_POSITION);
+ telemetry.update();
+ //sleep(CYCLE_MS);
+ robot.waitForTick(CYCLE_MS);
+ }
 
-********************************************/
-
-
+ ********************************************/
 
 
+    }
 
-}
 
