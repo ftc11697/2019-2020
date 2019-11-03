@@ -69,7 +69,7 @@ public class RoboDrive extends LinearOpMode {
         robot.frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         robot.rearLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
-
+        robot.pinchyBoi.setPosition(0);
 
         logMessage("Status", "Initialized v4.0a - " + myDateFormat.format(today));
 
@@ -151,7 +151,7 @@ public class RoboDrive extends LinearOpMode {
                 robot.verticalMotor.setPower(0);
 
                 //leons's dad pseudocode
-                if (gamepad1.back) {
+                /*if (gamepad1.back) {
                     robot.verticalMotor.setTargetPosition(-190);
                     robot.horizontalMotor.setTargetPosition(380);
                     robot.pinchyBoi.setPosition(.28);
@@ -159,7 +159,16 @@ public class RoboDrive extends LinearOpMode {
                         //seeingStone();
                     }
                 }
-//
+//              */
+
+                if(gamepad1.right_bumper) {
+                    robot.pinchyBoi.setPosition(.42);
+                    telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+                    telemetry.update();
+
+                }
+                telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+                telemetry.update();
 //            //Control Skystone-grabbing arm
 //            if(gamepad1.left_bumper) {
 //                robot.clampyBoi.setPosition(0.34);

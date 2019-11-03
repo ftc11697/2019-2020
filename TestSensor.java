@@ -32,7 +32,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
+
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -60,7 +63,6 @@ public class TestSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
         // Name sensors
         cantTouchThis = hardwareMap.get(DigitalChannel.class, "cantTouchThis");
 
@@ -78,13 +80,19 @@ public class TestSensor extends LinearOpMode {
             /*boolean sensorState= cantTouchThis.getState();
             testLoop++;
             telemetry.addData(cantTouchThis.getMode()+ " state" + testLoop + ":", sensorState); */
-
-            if (cantTouchThis.getState() == true) {
-                telemetry.addData("Touch Sensor", "Is Pressed");
-            } else {
-                telemetry.addData("Touch Sensor", "Is Not Pressed");
+            if(cantTouchThis.getState() == false) {
+                if (cantTouchThis.getState() == true) {
+                    telemetry.addData("Touch Sensor", "Is Pressed");
+                    //go to -1475
+                    robot.verticalMotor.setTargetPosition(-1475);
+                    robot.verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    robot.verticalMotor.setPower(.2);
+                    //pinch the block
+                    robot.pinchyBoi.setPosition(0);
+                    robot.pinchyBoi.setPosition(0.445);
+                }
+                telemetry.update();
             }
-            telemetry.update();
         }
     }
 }

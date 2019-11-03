@@ -81,6 +81,7 @@ public class TestServo extends LinearOpMode {
         telemetry.addData(">", "Press Start to scan Servo." );
         telemetry.update();
         waitForStart();
+        //robot.pinchyBoi.setPosition(0);
 
 
         // Scan servo till stop pressed.
@@ -152,7 +153,7 @@ public class TestServo extends LinearOpMode {
 
 
             while(gamepad1.x) {
-                curPosition1 += 0.001;
+                curPosition1 += 0.01;
 
                 robot.pinchyBoi.setPosition(curPosition1);
                 telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
@@ -162,7 +163,7 @@ public class TestServo extends LinearOpMode {
             telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
             telemetry.update();
             while(gamepad1.y) {
-                curPosition1 -= 0.001;
+                curPosition1 -= 0.01;
 
                 robot.pinchyBoi.setPosition(curPosition1);
                 telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
