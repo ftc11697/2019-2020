@@ -63,9 +63,10 @@ public class TestSensor extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+
+        robot.init(hardwareMap);
         // Name sensors
         cantTouchThis = hardwareMap.get(DigitalChannel.class, "cantTouchThis");
-
         // set the digital channel to input
         cantTouchThis.setMode(DigitalChannel.Mode.INPUT);
 
@@ -80,19 +81,30 @@ public class TestSensor extends LinearOpMode {
             /*boolean sensorState= cantTouchThis.getState();
             testLoop++;
             telemetry.addData(cantTouchThis.getMode()+ " state" + testLoop + ":", sensorState); */
-            if(cantTouchThis.getState() == false) {
-                if (cantTouchThis.getState() == true) {
-                    telemetry.addData("Touch Sensor", "Is Pressed");
-                    //go to -1475
-                    robot.verticalMotor.setTargetPosition(-1475);
-                    robot.verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    robot.verticalMotor.setPower(.2);
-                    //pinch the block
-                    robot.pinchyBoi.setPosition(0);
-                    robot.pinchyBoi.setPosition(0.445);
-                }
-                telemetry.update();
+
+//            while(cantTouchThis.getState() == true) {
+//                telemetry.addData("Touch Sensor", "Is Pressed");
+//                robot.pinchyBoi.setPosition(0.48);
+//                //go to -1475
+////                robot.verticalMotor.setTargetPosition(-1475);
+////                robot.verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+////                robot.verticalMotor.setPower(.2);
+//                //pinch the block
+//            }
+
+            if(cantTouchThis.getState() == true) {
+                telemetry.addData("", "pressed");
+                robot.pinchyBoi.setPosition(0.48);
+                robot.verticalMotor.setTargetPosition(-1475);
+                robot.verticalMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.verticalMotor.setPower(.2);
+
+            } else {
+                telemetry.addData("", "", "not pressed ");
+                robot.pinchyBoi.setPosition(0.12);
             }
+
+            telemetry.update();
         }
     }
 }

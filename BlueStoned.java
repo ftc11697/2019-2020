@@ -51,6 +51,12 @@ public class BlueStoned extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
             / (WHEEL_DIAMETER_INCHES * 3.1415);
 
+    //Variables for ramping
+    static double power = 0;
+    static final boolean rampUp = true;
+    static final double RAMP_INCREMENT = 0.01;
+    static final int CYCLE_MS = 50;
+
     // Used by system functions
     private ElapsedTime moveTimer = new ElapsedTime();
     private Date today = new Date();
@@ -111,14 +117,14 @@ public class BlueStoned extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-
+            //driveByEncoder(0.2, 90,90);
             //Move toward stones
-            driveByEncoder(5, 0, 00);
+            driveByEncoder(0.4, -5, -5);
 
             //Scan for skystones
             stoneDetect(tfod);
 
-            sleep(5000);
+            sleep(250);
 
             switch (stonePosition) {
                 case "LEFT":
@@ -130,13 +136,19 @@ public class BlueStoned extends LinearOpMode {
 
                     break;
 
-
                 case "CENTER":
                     //Move to skystone
+                    //driveByEncoder(0.5, 2, 0);
+                    //driveByEncoder(0.3, -3, -3);
 
-                    //Grab skystone
+                    driveByEncoder(0.3, -4.5, -4.5);
+                    driveByEncoder(0.3, 7, 7);
+                    driveByEncoder(0.3,-7.9,7.9);
+                    driveByEncoder(0.3, -0.1, 0.1);
 
-                    //Move away from skystone
+                    //Take out of switch after here:
+                    driveByEncoder(0.3, -12, -12);
+
 
                     break;
 
@@ -150,23 +162,59 @@ public class BlueStoned extends LinearOpMode {
                     break;
 
                 default:
+                    //Move towards SS
+                    driveByEncoder(0.3,-4.5,-4.5);
 
-                    //*INSERT CENTER CODE HERE*
+                    //Move away from SS
+                    driveByEncoder(0.3, 0.5, 0.5);
+
+                    //Turn to face foundation
+                    driveByEncoder(0.3,-7.75,7.75);
+
+                    //Drive to foundation
+                    driveByEncoder(0.7,-33,-33);
+
+                    //Turn to face foundation
+                    driveByEncoder(0.4,7.75,-7.75);
+
+                    //Wall align
+                    driveByEncoder(0.22,0, 4.5);
+                    driveByEncoder(0.22,5.3,0);
+
+                    //Drive up to foundation
+                    driveByEncoder(0.3,-2,-2);
+
+                    //Place Skystone
+
+                    //Drive up to + hook foundation
+                    driveByEncoder(0.1,-2.5,-2.5);
+
+                    robot.clampyBoi1.setPosition(0.47);
+                    robot.clampyBoi2.setPosition(0.52);
+                    sleep(500);
+
+                    //Drive to building zone
+                    driveByEncoder(0.3,12.5,12.5);
+
+                    sleep(100);
+
+                    //Lift clamping arms
+                    robot.clampyBoi1.setPosition(0.66);
+                    robot.clampyBoi2.setPosition(0.19);
+
                     break;
-
             }
 
             if (closeSkystone) {
                 //Adjust as necesssary
 
             } else {
-                //Adjust as necessary
+                //N/A for MEET 1
             }
 
 
             if (closeNavWall) {
-                //Adjust as necessary
-
+                //N/A for MEET 1
 
             } else {
                 //Adjust as necessary
@@ -179,17 +227,18 @@ public class BlueStoned extends LinearOpMode {
                 //Drag Foundation
 
             } else {
-                //Adjust
+                //N/A for MEET 1
 
             }
 
             //Place Skystone on Foundation
 
-            if (closeParkWall) {
-
-            } else {
-
-            }
+            //Eventually do this with better stabilization
+//            if (closeParkWall) {
+//
+//            } else {
+//
+//            }
 
 
             sleep(5000);
@@ -333,12 +382,16 @@ public class BlueStoned extends LinearOpMode {
         robot.rearLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rearRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // reset the motor speed and start motion.
+        // reset the motor speed and start motion
         robot.frontLeftMotor.setPower(Math.abs(speed));
         robot.frontRightMotor.setPower(Math.abs(speed));
         robot.rearLeftMotor.setPower(Math.abs(speed));
         robot.rearRightMotor.setPower(Math.abs(speed));
 
+        //Ramp up motor speed to match target
+//        while(power <= speed) {
+//            power += RAMP_INCREMENT;
+//        }
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         while (robot.frontLeftMotor.isBusy() && robot.frontRightMotor.isBusy() &&
@@ -467,4 +520,6 @@ public class BlueStoned extends LinearOpMode {
     }
 
 
+
 }
+

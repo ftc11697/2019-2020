@@ -162,11 +162,18 @@ public class RoboDrive extends LinearOpMode {
 //              */
 
                 if(gamepad1.right_bumper) {
-                    robot.pinchyBoi.setPosition(.42);
+                    robot.pinchyBoi.setPosition(.48);
                     telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                     telemetry.update();
 
                 }
+                if(gamepad1.left_bumper) {
+                    robot.pinchyBoi.setPosition(.12);
+                    telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+                    telemetry.update();
+
+                }
+
                 telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                 telemetry.update();
 //            //Control Skystone-grabbing arm

@@ -152,18 +152,17 @@ public class TestServo extends LinearOpMode {
             } */
 
 
-            while(gamepad1.x) {
-                curPosition1 += 0.01;
+            if(gamepad1.x) {
+               //curPosition1 += 0.001;
 
-                robot.pinchyBoi.setPosition(curPosition1);
+                robot.pinchyBoi.setPosition(.5);
                 telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                 telemetry.update();
 
             }
-            telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
-            telemetry.update();
-            while(gamepad1.y) {
-                curPosition1 -= 0.01;
+
+            if(gamepad1.y) {
+                curPosition1 -= 0.001;
 
                 robot.pinchyBoi.setPosition(curPosition1);
                 telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
