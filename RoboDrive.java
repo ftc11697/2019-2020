@@ -2,15 +2,12 @@
 /*
 https://github.com/Rambotics/FTC-2016-2017-v2.4-pc/tree/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode
 https://github.com/pmtischler/ftc_app/tree/master/SharedCode/src/main/java/com/github/pmtischler
-
 Code Folding Expand/Collapse ALL => Control || Shift || +/-
 Last Edit Location => Control + Shift + BackSpace
 Add Bookmark => Control + F11 + number
 Find Bookmark => Control + number
 Show Bookmarks => Shift + F11
 Jump to Declaration => Control + B
-
-
 */
 package org.firstinspires.ftc.teamcode;
 
@@ -159,36 +156,42 @@ public class RoboDrive extends LinearOpMode {
                         //seeingStone();
                     }
                 }
-//              */
-
-                if(gamepad1.right_bumper) {
-                    robot.pinchyBoi.setPosition(.48);
-                    telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
-                    telemetry.update();
-
-                }
-                if(gamepad1.left_bumper) {
+              */
+                //Set intake to open
+                if(gamepad1.dpad_left) {
                     robot.pinchyBoi.setPosition(.12);
                     telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
                     telemetry.update();
 
+                    //Close intake
+                } else if(gamepad1.dpad_down) {
+                    robot.pinchyBoi.setPosition(.48);
+                    telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
+                    telemetry.update();
                 }
 
-                telemetry.addData("Status: ", "Position Reading(pinchyBoi): " + robot.pinchyBoi.getPosition());
-                telemetry.update();
-//            //Control Skystone-grabbing arm
-//            if(gamepad1.left_bumper) {
-//                robot.clampyBoi.setPosition(0.34);
-//
-//                telemetry.addData("Status: ", "Position Reading: " + robot.clampyBoi.getPosition());
-//                telemetry.update();
-//
-//            } else if(gamepad1.right_bumper) {
-//                robot.clampyBoi.setPosition(0.5);
-//
-//                telemetry.addData("Status: ", "Position Reading: " + robot.clampyBoi.getPosition());
-//                telemetry.update();
-//            }
+                //Foundation arms up
+                if(gamepad1.left_bumper) {
+                    robot.clampyBoi1.setPosition(0.66);
+                    robot.clampyBoi2.setPosition(0.19);
+
+                    telemetry.addData("clampyBoi1 Position: ", + robot.clampyBoi1.getPosition());
+                    telemetry.addData("clampyBoi2 Position: ", + robot.clampyBoi2.getPosition());
+                    telemetry.update();
+
+                    //Foundation arms down
+                } else if(gamepad1.right_bumper) {
+                    robot.clampyBoi1.setPosition(0.47);
+                    robot.clampyBoi2.setPosition(0.52);
+
+                    telemetry.addData("clampyBoi1 Position: ", + robot.clampyBoi1.getPosition());
+                    telemetry.addData("clampyBoi2 Position: ", + robot.clampyBoi2.getPosition());
+                    telemetry.update();
+                }
+
+
+
+
 
                 /********************************************
                  *************GAMEPAD 2**********************
@@ -211,49 +214,49 @@ public class RoboDrive extends LinearOpMode {
 // ***** User Defined Functions *****
 //===========================================
 
-        private void driveByJoystick ( double lxValue, double lyValue, double rxValue){
-            double vD = Math.sqrt(Math.pow(lxValue, 2) + Math.pow(lyValue, 2));
-            //double thetaD = Math.atan2(lyValue, lxValue);
-            double thetaD = Math.atan2(lxValue, -lyValue);
-            double vTheta = rxValue;
+    private void driveByJoystick ( double lxValue, double lyValue, double rxValue){
+        double vD = Math.sqrt(Math.pow(lxValue, 2) + Math.pow(lyValue, 2));
+        //double thetaD = Math.atan2(lyValue, lxValue);
+        double thetaD = Math.atan2(lxValue, -lyValue);
+        double vTheta = rxValue;
 
-            // Convert desired motion to wheel power, with power clamping.
-            Mecanum.Wheels wheels = Mecanum.motionToWheels(vD, thetaD, vTheta);
-            robot.frontLeftMotor.setPower(wheels.frontLeft);
-            robot.frontRightMotor.setPower(wheels.frontRight);
-            robot.rearLeftMotor.setPower(wheels.backLeft);
-            robot.rearRightMotor.setPower(wheels.backRight);
+        // Convert desired motion to wheel power, with power clamping.
+        Mecanum.Wheels wheels = Mecanum.motionToWheels(vD, thetaD, vTheta);
+        robot.frontLeftMotor.setPower(wheels.frontLeft);
+        robot.frontRightMotor.setPower(wheels.frontRight);
+        robot.rearLeftMotor.setPower(wheels.backLeft);
+        robot.rearRightMotor.setPower(wheels.backRight);
 
-            //telemetry.addData("Status", "==> " + vD +", "+thetaD+", "+vTheta);
-            //telemetry.update();
+        //telemetry.addData("Status", "==> " + vD +", "+thetaD+", "+vTheta);
+        //telemetry.update();
+    }
+
+    private void stopRobot () {
+        robot.frontLeftMotor.setPower(0);
+        robot.frontRightMotor.setPower(0);
+        robot.rearLeftMotor.setPower(0);
+        robot.rearRightMotor.setPower(0);
+    }
+
+    private void logMessage (String myDescription, String myMessage) throws InterruptedException
+    {
+
+        telemetry.addData(myDescription, myMessage);
+        telemetry.update();
+        RobotLog.d("11697CW - " + myDescription + " : " + myMessage);
+
+    }
+
+    private float getJoystickValue ( float rawValue){
+        //clip the power values so that it only goes from -1 to 1
+        rawValue = Range.clip(rawValue, -1, 1);
+
+        if (Math.abs(rawValue) < 0.1) {
+            return 0;
+        } else {
+            return rawValue * SPEED_RATE;
         }
-
-        private void stopRobot () {
-            robot.frontLeftMotor.setPower(0);
-            robot.frontRightMotor.setPower(0);
-            robot.rearLeftMotor.setPower(0);
-            robot.rearRightMotor.setPower(0);
-        }
-
-        private void logMessage (String myDescription, String myMessage) throws InterruptedException
-        {
-
-            telemetry.addData(myDescription, myMessage);
-            telemetry.update();
-            RobotLog.d("11697CW - " + myDescription + " : " + myMessage);
-
-        }
-
-        private float getJoystickValue ( float rawValue){
-            //clip the power values so that it only goes from -1 to 1
-            rawValue = Range.clip(rawValue, -1, 1);
-
-            if (Math.abs(rawValue) < 0.1) {
-                return 0;
-            } else {
-                return rawValue * SPEED_RATE;
-            }
-        }
+    }
 /*
     private void seeingStone(){
         horizontalMotor.setTargetPosition(350);
@@ -267,9 +270,7 @@ public class RoboDrive extends LinearOpMode {
 // ***** Section 6              *****
 // ***** Backup Un-used Code    *****
 //===========================================
-
 /********************************************
-
  if (gamepad1.dpad_up) {
  V_POSITION += INCREMENT ;
  if (V_POSITION >= robot.VArmHigh ) {
@@ -292,10 +293,7 @@ public class RoboDrive extends LinearOpMode {
  //sleep(CYCLE_MS);
  robot.waitForTick(CYCLE_MS);
  }
-
  ********************************************/
 
 
-    }
-
-
+}
