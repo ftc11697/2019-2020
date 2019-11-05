@@ -14,6 +14,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -62,10 +63,18 @@ public class RoboDrive extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
+        /*
         robot.frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         robot.rearLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         robot.rearRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        */
+
+        robot.frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        robot.frontRightMotor.setDirection(DcMotor.Direction.FORWARD);
+        robot.rearLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        robot.rearRightMotor.setDirection(DcMotor.Direction.FORWARD);
+
         robot.pinchyBoi.setPosition(0);
 
         logMessage("Status", "Initialized v4.0a - " + myDateFormat.format(today));
@@ -80,10 +89,10 @@ public class RoboDrive extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Drive the robot
-            lxValue = getJoystickValue(-gamepad1.left_stick_x);
-            lyValue = getJoystickValue(-gamepad1.left_stick_y);
-            rxValue = getJoystickValue(-gamepad1.right_stick_x);
-            ryValue = getJoystickValue(-gamepad1.right_stick_y);
+            lxValue = getJoystickValue(gamepad1.left_stick_x);
+            lyValue = getJoystickValue(gamepad1.left_stick_y);
+            rxValue = getJoystickValue(gamepad1.right_stick_x);
+            ryValue = getJoystickValue(gamepad1.right_stick_y);
             driveByJoystick(-lxValue, lyValue, rxValue);
 
 
